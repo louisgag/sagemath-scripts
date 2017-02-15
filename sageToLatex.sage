@@ -75,7 +75,9 @@ if (printArticle):
                   sr2 = re.sub('([^,]+),([^,]+)',r'{\1}{\2}',sr)
                   theStr = theStr.replace('derivative('+sr+")",'\diff'+sr2)
       for sr in paranthese_match('sqrt(',theStr):
-          theStr = theStr.replace('sqrt('+sr+")",'\sqrt{'+sr+'}')
+          theStr = theStr.replace('sqrt('+sr+")",'\sqrt{'+sr+'}')      
+      for sr in paranthese_match('abs(',theStr):
+          theStr = theStr.replace('abs('+sr+")",'\\lvert'+sr+'\\rvert') # requires \usepackage{mathtools} and \DeclarePairedDelimiter\abs{\lvert}{\rvert}% in the Latex header
       for sr in paranthese_match('^(',theStr):
           theStr = theStr.replace('^('+sr+")",'^{'+sr+'}')
       for sr in paranthese_match('exp(',theStr):
@@ -86,7 +88,7 @@ if (printArticle):
       for i in range(1,2): # set upper range to maximum+1 expect embeded supercripts
           theStr = re.sub('\^([a-zA-Z0-9\.\^]+)',r'^{\1}',theStr)
       if (isEqn != 1):
-          itsLabel = '\\label{eq:isEqn}'
+          itsLabel = '\\label{eq:' + isEqn + '}'
       else:
           itsLabel = ''
       if (isEqn):
