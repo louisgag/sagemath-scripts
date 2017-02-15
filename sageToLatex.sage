@@ -43,14 +43,14 @@ if (printArticle):
                  break
           theStr = theStr[li:]
       return matches
-   def get_expression(theStr,isEqn): # customized for my own purpose
+   def get_expression(theStr,isEqn): # customized for my own purpose, isEqn can beel bool or eqn label
       theStr = re.sub('([0-9.]+)\*([0-9.]+)',r'\1 \cdot \2',theStr)
       theStr = re.sub('([a-zA-Z0-9\._\^]+)/([a-zA-Z0-9_\.\^]+)',r'subBackslashfrac{\1}{\2}',theStr)
       theStr = theStr.replace('*',' ')
       for i in range(1,3):
           theStr = theStr.replace('  ',' ')
       theStr = re.sub('([^a-zA-Z0-9_]|^)pi([^a-zA-Z0-9_]|$)',r'\1subBackslashpi\2',theStr) ## NOTE: this prevents replacement of pi in subscripts (_) because in my code _pi means the percent infill subscript
-      rrr = r'([^a-zA-Z0-9]|^)(theta|Omega|Lambda|rho|alpha|epsilon|sigma|[Pp]hi|tau|eta|kappa|mu|zeta)([^a-zA-Z0-9]|$)' # scanning for greek letter names not part of a longer word but possibly at beginning or end of string
+      rrr = r'([^a-zA-Z0-9]|^)(theta|Omega|Lambda|rho|alpha|epsilon|sigma|[Pp]hi|tau|eta|kappa|mu|zeta|[Dd]elta)([^a-zA-Z0-9]|$)' # scanning for greek letter names not part of a longer word but possibly at beginning or end of string
       while (re.search(rrr,theStr)): # looping until there are no longer such greek letter names
           theStr = re.sub(rrr,r'\1subBackslash\2\3',theStr)
       theStr = theStr.replace('Lambda','lambda')
@@ -85,8 +85,12 @@ if (printArticle):
           theStr = re.sub('_([a-zA-Z0-9_]+)',r'_{\1}',theStr)
       for i in range(1,2): # set upper range to maximum+1 expect embeded supercripts
           theStr = re.sub('\^([a-zA-Z0-9\.\^]+)',r'^{\1}',theStr)
+      if (isEqn != 1):
+          itsLabel = '\\label{eq:isEqn}'
+      else:
+          itsLabel = ''
       if (isEqn):
-          return "\\begin{dmath}"+theStr+"\end{dmath}\n"
+          return "\\begin{dmath}"+itsLabel+theStr+"\end{dmath}\n"
       else:
           return "$"+theStr+"$\n"
    latexPrint = ''
